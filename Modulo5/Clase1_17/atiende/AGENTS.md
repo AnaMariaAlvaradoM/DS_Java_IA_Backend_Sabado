@@ -24,6 +24,15 @@ Antes de cambiar reglas de negocio, lee `SPEC.md`: es la fuente de verdad.
 
 ## Tests
 - JUnit 5 + Mockito. Los tests del Service no levantan Spring.
+- Nunca modifiques un test para que pase. Si un test falla, explícame si la causa está en el test o en el código y espera mi decisión.
+- Un test rojo contra la SPEC es una pregunta de negocio: no la resuelvas tú.
+
+## IA (desde la Fase 2)
+- Todo proveedor de IA implementa la interfaz `ProveedorIA` en el paquete `ia/`.
+- Las llamadas HTTP se hacen con `RestClient`. Sin SDKs de proveedores ni Spring AI.
+- Nunca escribas llaves en el código ni en `application.properties`: van en `secrets.properties`, que no puedes leer.
+- Antes de usar una URL, un header, un parámetro o un nombre de modelo de una API de IA, verifícalo en la documentación oficial actual. Tu conocimiento puede estar desactualizado.
+- Nunca registres en logs el mensaje del cliente ni las llaves.
 
 ## Límites
 - No agregues dependencias al `pom.xml` sin preguntarme.

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.devsenior.atiende.ia.AsistenteIA;
+import com.devsenior.atiende.ticket.dto.AnalisisSentimientoRespuesta;
 import com.devsenior.atiende.ticket.dto.CambiarEstadoSolicitud;
 import com.devsenior.atiende.ticket.dto.CrearTicketSolicitud;
 import com.devsenior.atiende.ticket.dto.TicketRespuesta;
@@ -24,9 +26,11 @@ import jakarta.validation.Valid;
 public class TicketControlador {
 
     private final TicketServicio ticketServicio;
+    private final AsistenteIA asistenteIA;
 
-    public TicketControlador(TicketServicio ticketServicio) {
+    public TicketControlador(TicketServicio ticketServicio, AsistenteIA asistenteIA) {
         this.ticketServicio = ticketServicio;
+        this.asistenteIA = asistenteIA;
     }
 
     @PostMapping
@@ -50,5 +54,11 @@ public class TicketControlador {
             @PathVariable Long id,
             @Valid @RequestBody CambiarEstadoSolicitud solicitud) {
         return ResponseEntity.ok(ticketServicio.cambiarEstado(id, solicitud));
+    }
+
+    @PostMapping("/{id}/sentimiento")
+    public ResponseEntity<AnalisisSentimientoRespuesta> analizarSentimiento(@PathVariable Long id) {
+        AnalisisSentimientoRespuesta respuesta = asistenteIA.analizarPorTicket(id);
+        return ResponseEntity.ok(respuesta);
     }
 }
