@@ -51,6 +51,17 @@ public class TicketService {
         return ticketMapper.toResponse(ticketRepository.saveAndFlush(ticket));
     }
 
+    @Transactional
+    public TicketResponse aplicarClasificacion(Long id, ClasificacionIA clasificacion, Long numeroPedido) {
+        Ticket ticket = obtenerTicket(id);
+        ticket.setCategoria(clasificacion.categoria());
+        ticket.setPrioridad(clasificacion.prioridad());
+        ticket.setSentimiento(clasificacion.sentimiento());
+        ticket.setResumen(clasificacion.resumen());
+        ticket.setNumeroPedido(numeroPedido);
+        return ticketMapper.toResponse(ticketRepository.saveAndFlush(ticket));
+    }
+
     private Ticket obtenerTicket(Long id) {
         return ticketRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("No existe el ticket con id " + id));

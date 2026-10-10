@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import com.devsenior.atiende.ia.AsistenteIA;
+import com.devsenior.atiende.ia.BibliotecaPrompts;
 import com.devsenior.atiende.ia.RespuestaIA;
 import com.devsenior.atiende.ia.RespuestaIAInvalidaException;
 import com.devsenior.atiende.ticket.dto.AnalisisSentimientoResponse;
@@ -31,7 +32,7 @@ class SentimientoServiceTest {
 
     @BeforeEach
     void setUp() {
-        sentimientoService = new SentimientoService(ticketService, asistenteIA);
+        sentimientoService = new SentimientoService(ticketService, asistenteIA, new BibliotecaPrompts());
         when(ticketService.buscarPorId(1L)).thenReturn(ticketDeLaura());
     }
 
@@ -59,7 +60,8 @@ class SentimientoServiceTest {
     private TicketResponse ticketDeLaura() {
         return new TicketResponse(1L, "Laura Gómez", "+57 300 123 4567", Canal.WHATSAPP,
                 "Pedí el pedido 1045 hace 8 días y no llega", EstadoTicket.ABIERTO,
-                Prioridad.MEDIA, LocalDateTime.now(), LocalDateTime.now());
+                Prioridad.MEDIA, LocalDateTime.now(), LocalDateTime.now(),
+                null, null, null, null);
     }
 
     private RespuestaIA respuestaIA(String texto) {

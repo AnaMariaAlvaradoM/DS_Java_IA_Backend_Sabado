@@ -1,6 +1,7 @@
 package com.devsenior.atiende.ticket;
 
 import com.devsenior.atiende.ia.AsistenteIA;
+import com.devsenior.atiende.ia.BibliotecaPrompts;
 import com.devsenior.atiende.ia.RespuestaIA;
 import com.devsenior.atiende.ia.RespuestaIAInvalidaException;
 import com.devsenior.atiende.ticket.dto.AnalisisSentimientoResponse;
@@ -10,26 +11,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class SentimientoService {
 
-    private static final String INSTRUCCIONES = """
-            Eres analista de atención al cliente de una tienda online de café.
-            Clasifica el sentimiento del mensaje del cliente:
-            - MOLESTO: queja, reclamo, retraso o frustración.
-            - NEUTRAL: pregunta o solicitud de información.
-            - CONTENTO: agradecimiento o elogio.
-            Responde SOLO con una palabra: MOLESTO, NEUTRAL o CONTENTO.
-            """;
-
     private final TicketService ticketService;
     private final AsistenteIA asistenteIA;
+    private final BibliotecaPrompts bibliotecaPrompts;
 
-    public SentimientoService(TicketService ticketService, AsistenteIA asistenteIA) {
+    public SentimientoService(TicketService ticketService, AsistenteIA asistenteIA,
+                              BibliotecaPrompts bibliotecaPrompts) {
         this.ticketService = ticketService;
         this.asistenteIA = asistenteIA;
+        this.bibliotecaPrompts = bibliotecaPrompts;
     }
 
     public AnalisisSentimientoResponse analizar(Long ticketId) {
         TicketResponse ticket = ticketService.buscarPorId(ticketId);
-        RespuestaIA respuesta = asistenteIA.completar(INSTRUCCIONES, ticket.mensaje());
+        String instrucciones = bibliotecaPrompts.cargar("sentimiento");
+        RespuestaIA respuesta = asistenteIA.completar(instrucciones, ticket.mensaje());
 
         Sentimiento sentimiento = Sentimiento.desdeTextoIA(respuesta.texto())
                 .orElseThrow(() -> new RespuestaIAInvalidaException(

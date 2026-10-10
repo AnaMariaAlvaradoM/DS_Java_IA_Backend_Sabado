@@ -26,7 +26,11 @@ public class TicketMapper {
                 ticket.getEstado(),
                 ticket.getPrioridad(),
                 ticket.getFechaCreacion(),
-                ticket.getFechaActualizacion()
+                ticket.getFechaActualizacion(),
+                ticket.getCategoria(),
+                ticket.getSentimiento(),
+                ticket.getResumen(),
+                ticket.getNumeroPedido()
         );
     }
 }
